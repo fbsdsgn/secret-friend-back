@@ -14,10 +14,29 @@ module.exports.send = async (req, res) => {
     },
   });
 
-  friends.map(
+  const newArray = [];
+
+  let rand = Math.floor(Math.random() * friends.length);
+  let count = 1;
+  newArray.push(friends[rand]);
+
+  while (count < friends.length) {
+    const newRand = Math.floor(Math.random() * friends.length);
+    if (!newArray.includes(friends[newRand])) {
+      count++;
+      rand = newRand;
+      newArray.push(friends[rand]);
+    }
+  }
+
+  newArray.map(
     ({ dataValues }, index) => {
-      index = Math.floor(Math.random() * friends.length - 0 + 0) + 0;
-      const name = friends[index].dataValues.name;
+      let name;
+      if (typeof newArray[index + 1] !== "undefined") {
+        name = newArray[index + 1].dataValues.name;
+      } else {
+        name = newArray[0].dataValues.name;
+      }
       transport.sendMail({
         from: `<pessoa@teste.com>`,
         to: dataValues.email,
